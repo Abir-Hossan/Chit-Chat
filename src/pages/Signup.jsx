@@ -47,15 +47,15 @@ const Signup = () => {
         .then((userCredential) => {
           setLoader(true);
           setTimeout(() => {
-            setLoader(false)
-            navigate('/')
+            setLoader(false);
+            navigate("/");
             const user = userCredential.user;
-            confirm.log(user)
+            confirm.log(user);
           }, 3000);
         })
         .catch((error) => {
           setTimeout(() => {
-            setLoader(false)
+            setLoader(false);
             console.log(error);
             // const errorCode = error.code;
             // const errorMessage = error.message;
@@ -183,7 +183,10 @@ const Signup = () => {
               <div className=" mt-[15px]">
                 <p className=" font-sans text-[13px] ">
                   Already have an account ?{" "}
-                  <Link to="/" className="text-[13px] font-sans font-bold text-[#EA6C00]">
+                  <Link
+                    to="/"
+                    className="text-[13px] font-sans font-bold text-[#EA6C00]"
+                  >
                     Sign In
                   </Link>
                 </p>
