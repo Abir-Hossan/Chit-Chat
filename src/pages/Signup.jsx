@@ -51,16 +51,18 @@ const Signup = () => {
             navigate("/");
             const user = userCredential.user;
             confirm.log(user);
-          }, 3000);
+          }, 2000);
         })
         .catch((error) => {
           setTimeout(() => {
             setLoader(false);
+            error.code.includes("auth/email-already-in-use") &&
+              setEmailErr("*This email is already used");
             console.log(error);
             // const errorCode = error.code;
             // const errorMessage = error.message;
             // ..
-          }, 3000);
+          }, 2000);
         });
     }
   };
@@ -158,7 +160,7 @@ const Signup = () => {
 
             <div className=" w-96 text-center">
               {loader ? (
-                <div className=" mt-[15px]">
+                <div className=" mt-[15px] flex justify-center">
                   <Circles
                     height="80"
                     width="80"

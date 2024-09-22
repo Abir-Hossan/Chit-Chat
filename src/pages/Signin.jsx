@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import login from "../assets/login.png";
+import google from "../assets/google.png";
 import { Link } from "react-router-dom";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Signin = () => {
+  const auth = getAuth();
+  signInWithPopup(auth);
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [emailErr, setEmailErr] = useState("");
@@ -30,6 +39,32 @@ const Signin = () => {
     if (!password) {
       setPasswordErr("*Password is Required");
     }
+    if (email && password) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          // const errorMessage = error.message;
+          if (error.code.includes("auth/invalid-credential")) {
+            setEmailErr("*Invalid-Credential");
+          }
+          console.log(errorCode);
+        });
+    }
+  };
+
+  let handleGoogleLogin = () => {
+    signInWithPopup(auth)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -39,6 +74,10 @@ const Signin = () => {
           <h2 className=" font-sans text-[#11175D] font-bold text-[33px]">
             Login to your account!
           </h2>
+
+          <button onClick={handleGoogleLogin} className="mt-[10px]">
+            <img src={google} alt="google" />
+          </button>
 
           <div className=" relative mt-[30px]">
             <input
