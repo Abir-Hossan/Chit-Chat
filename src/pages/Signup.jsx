@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import registration from "../assets/registration.png";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { Circles } from "react-loader-spinner";
 
 const Signup = () => {
@@ -45,13 +49,15 @@ const Signup = () => {
     if (email && fullName && password) {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          setLoader(true);
-          setTimeout(() => {
-            setLoader(false);
-            navigate("/");
-            const user = userCredential.user;
-            confirm.log(user);
-          }, 2000);
+          sendEmailVerification(auth.currentUser).then(() => {
+            setLoader(true);
+            setTimeout(() => {
+              setLoader(false);
+              navigate("/");
+              const user = userCredential.user;
+              confirm.log(user);
+            }, 2000);
+          });
         })
         .catch((error) => {
           setTimeout(() => {
