@@ -12,7 +12,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Signin = () => {
   const auth = getAuth();
-  signInWithPopup(auth);
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, );
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [emailErr, setEmailErr] = useState("");
@@ -41,7 +42,7 @@ const Signin = () => {
     }
     if (email && password) {
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then((userCredential,) => {
           const user = userCredential.user;
           console.log(user);
         })
@@ -57,7 +58,7 @@ const Signin = () => {
   };
 
   let handleGoogleLogin = () => {
-    signInWithPopup(auth)
+    signInWithPopup(auth, provider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         console.log(result);
