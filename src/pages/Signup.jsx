@@ -6,10 +6,15 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile
 } from "firebase/auth";
 import { Circles } from "react-loader-spinner";
+import { getDatabase, ref, set } from "firebase/database";
+
+
 
 const Signup = () => {
+  const db = getDatabase();
   const auth = getAuth();
   let navigate = useNavigate();
   let [email, setEmail] = useState("");
@@ -50,13 +55,24 @@ const Signup = () => {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           sendEmailVerification(auth.currentUser).then(() => {
-            setLoader(true);
-            setTimeout(() => {
-              setLoader(false);
-              navigate("/");
-              const user = userCredential.user;
-              confirm.log(user);
-            }, 2000);
+            updateProfile(auth.currentUser, {
+              displayName: name,
+              photoURL: "/homepic.png"
+            }).then(() => {
+              set(ref(db, 'users/' + userCredential.user.uid), {
+                name: userCredential.user.displayName ,
+                email: userCredential.user.email,
+                image: "/homepic.png",
+              }).then(() => {
+                setTimeout(() => {
+                  setLoader(false);
+                  navigate("/Signin");
+                }, 2000);
+              })
+            }).catch((error) => {
+              console.log(error)
+            });
+            
           });
         })
         .catch((error) => {
@@ -192,7 +208,7 @@ const Signup = () => {
                 <p className=" font-sans text-[13px] ">
                   Already have an account ?{" "}
                   <Link
-                    to="/"
+                    to="/Signin"
                     className="text-[13px] font-sans font-bold text-[#EA6C00]"
                   >
                     Sign In
