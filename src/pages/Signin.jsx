@@ -8,12 +8,15 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
+import { useDispatch } from "react-redux";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { signedinUserInfo } from "../slices/userslice";
 
 const Signin = () => {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, );
+  signInWithPopup(auth);
+  let dispatch = useDispatch();
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [emailErr, setEmailErr] = useState("");
@@ -42,9 +45,10 @@ const Signin = () => {
     }
     if (email && password) {
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential,) => {
+        .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          dispatch(signedinUserInfo(user));
+          
         })
         .catch((error) => {
           const errorCode = error.code;
